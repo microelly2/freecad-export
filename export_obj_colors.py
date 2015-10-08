@@ -20,7 +20,7 @@ sources = FreeCADGui.Selection.getSelection()
 targetname="TTC"
 pathdemo="/tmp/"
 pathdemo="/home/thomas/Dokumente/freecad_buch/152_obj_export_mit_farben/tmp/"
-obname="exported_from_freecad"
+obname="exported_from_freecad_v2"
 
 
 
@@ -79,7 +79,8 @@ sources=splitToFaces(sources)
 
 f1=open(pathdemo+obname+".obj",'w')
 f1.write("# FreeCAD export colored OBJ File:\n")
-f1.write("mtllib "+obname+".mtl\n")
+#f1.write("mtllib "+obname+".mtl\n")
+f1.write("mtllib colors64.mtl\n")
 f1.write("o "+obname+"\n")
 
 sloop=-1
@@ -92,7 +93,10 @@ h=farbwert(0,0,1.0)
 x=0.5+ 0.5*cos(h)*0.9
 y=0.5 + 0.5*sin(h)*0.9
 vt_string += "# " + str(z) +  "  Fehlerfarbe "   + "\n"
-vt_string += "vt 0.5 0.5\n"
+# neue farbpalette
+#vt_string += "vt 0.5 0.5\n"
+vt_string += "vt 0.5 0.3\n"
+
 
 v_ix=0
 f_ix=1
@@ -147,10 +151,34 @@ for source in  sources:
 
 	sc=source.ViewObject.DiffuseColor[0]
 	target.ViewObject.DiffuseColor=sc
+	
 	h=farbwert(sc[0],sc[1],sc[2])
 	x=0.5+ 0.5*cos(h)*0.9
 	y=0.5 + 0.5*sin(h)*0.9
+	if 1 or False:
+	#	[r,g,b]=[100,100,100]
+		FreeCAD.Console.PrintMessage(sc)
+		[r,g,b,tt]=sc
+	#	print sc
+		rr=int(r*15)
+		r1=int(rr/4) 
+		r2=int(rr%4)
+	#	r1=0
+	#	r2=0
+		g=(g*15)
+		b=(b*15)
+		# $r1*16+$g,$r2*16+$b,$t);
+		FreeCAD.Console.PrintMessage("\n")
+		FreeCAD.Console.PrintMessage([rr,b,g,r1,r2])
+		FreeCAD.Console.PrintMessage("\n")
+		x=(0.0+ r1*16+g)/63
+		y=1-(0.0+ r2*16+b)/63
+		#[x,y]=[0.1,0.9]
+		FreeCAD.Console.PrintMessage([x,y])
+		FreeCAD.Console.PrintMessage("\n")
+	
 	vt_string +="# " + str(z) +  "   " + str(sc)  + "\n"
+	#vt_string +="vt " +str(x) + " " + str(y) + "\n"
 	vt_string +="vt " +str(x) + " " + str(y) + "\n"
 	z += 1
 
